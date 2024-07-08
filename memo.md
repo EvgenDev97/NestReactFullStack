@@ -12,3 +12,5 @@ useFactory: подключение к ORM (app.module)
 
 Связь между таблицами - реализуются в .entity https://typeorm.io/many-to-one-one-to-many-relations 
 OneToMany - связь один ко многим ManyToOne - многие к одному
+
+// Регистрация 

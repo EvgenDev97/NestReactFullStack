@@ -29,8 +29,8 @@ export class UserService {
     return {user};
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} user`;
+  async findOne(email: string): Promise<User | undefined> {
+    return await this.userRepository.findOne({where:{email:email}})
   }
 
 
