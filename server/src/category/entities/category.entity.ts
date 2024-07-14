@@ -12,7 +12,7 @@ import {Transaction} from "../../transaction/entities/transaction.entity";
 
 @Entity()
 export class Category {
-    @PrimaryGeneratedColumn()
+    @PrimaryGeneratedColumn({name: "category_Id"})
     id: number;
 
     @Column()
@@ -25,12 +25,9 @@ export class Category {
     updateDate:Date
 
     @ManyToOne (()=> User, (user)=> user.category)
-    @JoinColumn({name:"category_id"})
+    @JoinColumn({name:"user_id"})
     user:User
 
     @OneToMany( ()=> Transaction , (transaction) => transaction.category)
     transaction:Transaction[]
-
-
-
 }

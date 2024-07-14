@@ -27,8 +27,7 @@ export class User {
 
     //category link
     @OneToMany( ()=> Category,
-        (category)=> category.user
-        )
+        (category)=> category.user)
     category:Category[]
 
 }
