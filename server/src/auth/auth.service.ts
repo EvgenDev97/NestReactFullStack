@@ -10,7 +10,12 @@ export class AuthService {
  //login
   async validateUser(email: string, password: string) {
     const user = await this.userService.findOne(email);
-    const passwordIsMatch = await argon2.verify(user.password, password );
+    let passwordIsMatch
+    if(user){
+      passwordIsMatch = await argon2.verify(user.password, password);
+    }else{
+      throw new UnauthorizedException("the email was not match");
+    }
     if (user && passwordIsMatch) {
       return user;
     }
@@ -18,20 +23,11 @@ export class AuthService {
   }
 
   async login(user: IUser) {
-    try{
-      const {id, email} = user
-      return {
-        id,
-        email,
-        token:this.jwtService.sign({id:user.id, email:user.email}),
-      };
-    }catch (e){
-      throw new HttpException({
-        status: HttpStatus.FORBIDDEN,
-        error: 'This is a custom message',
-      }, HttpStatus.FORBIDDEN, {
-        cause: e
-      });
-    }
+    const {id, email} = user
+    return {
+      id,
+      email,
+      token:this.jwtService.sign({id:user.id, email:user.email}),
+    };
   }
 }

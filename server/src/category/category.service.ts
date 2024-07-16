@@ -35,10 +35,10 @@ export class CategoryService {
         //ERROR
         where:{
             user:{id:id}
+        },
+        relations:{
+            transaction:true
         }
-        // relations:{
-        //     transaction:true
-        // }
     })
   }
 
