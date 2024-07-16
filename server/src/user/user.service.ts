@@ -9,9 +9,7 @@ import {JwtService} from "@nestjs/jwt";
 @Injectable()
 export class UserService {
 
-    constructor(@InjectRepository(User) private userRepository: Repository<User>, private readonly jwtService:JwtService) {
-
-    }
+    constructor(@InjectRepository(User) private userRepository: Repository<User>, private readonly jwtService: JwtService) {}
 
     async create(createUserDto: CreateUserDto) {
         const exist = await this.userRepository.findOne({
@@ -27,7 +25,7 @@ export class UserService {
             password: await argon2.hash(createUserDto.password),
         })
 
-        const token = this.jwtService.sign({email:createUserDto.email})
+        const token = this.jwtService.sign({email: createUserDto.email})
         return {user, token};
     }
 
