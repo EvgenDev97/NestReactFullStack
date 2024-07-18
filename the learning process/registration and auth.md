@@ -35,3 +35,9 @@
     })
 
 21 - jwt.strategy.ts 
+22 - jwt-auth.guard.ts extends jwt
+23 -@Get('profile') jwt-auth.guard.ts
+
+///registration 
+User.module - добавить jwtModule
+user.service вернуть токен 
