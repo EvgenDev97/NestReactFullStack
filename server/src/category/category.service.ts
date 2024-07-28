@@ -32,7 +32,7 @@ export class CategoryService {
 
     async findAll(id: number) {
         return await this.categoryRepository.find({
-            //ERROR
+
             where: {
                 user: {id: id}
             },
