@@ -1,4 +1,4 @@
-import {BadRequestException, Injectable} from '@nestjs/common';
+import {BadRequestException, Injectable, NotFoundException} from '@nestjs/common';
 import { CreateTransactionDto } from './dto/create-transaction.dto';
 import { UpdateTransactionDto } from './dto/update-transaction.dto';
 import {InjectRepository} from "@nestjs/typeorm";
@@ -23,19 +23,72 @@ export class TransactionService {
     return await this.transactionRepository.save(newTransaction)
   }
 
-  findAll() {
-    return `This action returns all transaction`;
+  async findAll(id:number) {
+    const transactions = await  this.transactionRepository.find({
+      where:{
+        user:{id:id}
+      },
+      order:{
+        createDate:"DESC"
+      },
+      relations: {
+        category:true
+      }
+    })
+    return transactions
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} transaction`;
+  async findOne(id: number) {
+    const isExist = await this.transactionRepository.findOne({
+      where:{id},
+      relations:{
+        user:true,
+        category:true
+      },
+      order:{
+        updateDate:"DESC"
+      }
+    })
+    if(!isExist) throw new NotFoundException("category not found")
+    return isExist
   }
 
-  update(id: number, updateTransactionDto: UpdateTransactionDto) {
-    return `This action updates a #${id} transaction`;
+  async update(id: number, updateTransactionDto: UpdateTransactionDto) {
+    const isExist = await this.transactionRepository.findOne({
+      where:{id}
+    })
+
+    if(!isExist) throw new NotFoundException("Category for update not found")
+    return await this.transactionRepository.update(id, updateTransactionDto)
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} transaction`;
+  async remove(id: number) {
+    const isExist = await this.transactionRepository.findOne({
+      where:{id}
+    })
+    if(!isExist) return new NotFoundException("Transaction not found")
+    return  await this.transactionRepository.delete(id)
+  }
+
+
+
+  async findAllWithPagination(id:number,page:number, limit:number){
+    const transactions = await this.transactionRepository.find({
+      where:{
+        user: {id}
+      },
+      relations:{
+        category:true,
+        user:true
+      },
+      order:{
+        createDate:"DESC"
+      },
+      // pagination
+      take:limit,
+      skip:(page - 1) * limit
+    })
+
+    return transactions
   }
 }
